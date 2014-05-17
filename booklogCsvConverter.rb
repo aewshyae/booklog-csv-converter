@@ -25,17 +25,19 @@ class BCCUtility
 end
 
 class BooklogCsvConverter 
-  if /booklog\d{14}\.csv/.match(ARGV[0])==nil then
-      raise ArgumentError, 'ファイル名が異なります。ファイル名は"booklog99999999999999.csv"(9は数字,14桁)です。'
+  def converter(inputFilename, outputPath='~')
+    if /booklog\d{14}\.csv/.match(inputFilename)==nil then
+        raise ArgumentError, 'ファイル名が異なります。ファイル名は"booklog99999999999999.csv"(9は数字,14桁)です。'
+    end
+    outputFilename=File.expand_path(outputPath)+'/bibgraph' + Time.now.strftime("%Y%m%d_%H%M%S")+ '.txt'
+    File.open(inputFilename, "r:Shift_jis:utf-8") { |f|
+      File.open(outputFilename, "w") { |o|
+            f.each_line { |l| 
+                array = l.delete("\"").split(",").slice(11,4)
+                o.puts  BCCUtility.conv2bibstyle(array[1],array[0],array[2],array[3])
+            }
+        } 
+    }
   end
-  FILE_NAME='bibgraph' + Time.now.strftime("%Y%m%d_%H%M%S")+ '.txt'
-  File.open(FILE_NAME, "w") { |o|
-      File.open(ARGV[0], "r:Shift_jis:utf-8") { |f|
-          f.each_line { |l| 
-              array = l.delete("\"").split(",").slice(11,4)
-              o.puts  BCCUtility.conv2bibstyle(array[1],array[0],array[2],array[3])
-          }
-      } 
-  }
 end
 
