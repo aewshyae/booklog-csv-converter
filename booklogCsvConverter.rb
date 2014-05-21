@@ -25,7 +25,7 @@ class BCCUtility
 end
 
 class BooklogCsvConverter 
-  def converter(inputFilename, outputPath='~')
+  def converter(inputFilename, outputPath)
     if /booklog\d{14}\.csv/.match(inputFilename)==nil then
         raise ArgumentError, 'ファイル名が異なります。ファイル名は"booklog99999999999999.csv"(9は数字,14桁)です。'
     end
